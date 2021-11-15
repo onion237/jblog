@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="category">
+	<insert id="insert" parameterType="CategoryVo" useGeneratedKeys="true" keyProperty="no">
+		insert into category(name, `desc`, blog_no, is_default) values(#{name}, #{desc}, #{blogNo}, #{isDefault})
+	</insert>
+	<delete id="delete" parameterType="long">
+		delete from category where no = #{no} 
+	</delete>
+	<select id="findByNo" parameterType="long" resultType="CategoryVo">
+		select no, name, `desc`, is_default, blog_no
+		from category
+		where no = #{no}
+	</select>
+	<select id="findByBlogNo" parameterType="long" resultType="CategoryVo">
+		select no, name, `desc`, is_default, blog_no
+		from category
+		where blog_no = #{blogNo}
+	</select>
+	<select id="findByBlogId" parameterType="string" resultType="CategoryVo">
+		select no, name, `desc`, is_default, blog_no, (select count(*) from post where category_no = no) as postCount
+		from category
+		where blog_no = (select no from user where id = #{blogId})
+	</select>
+	<select id="getUserNo" parameterType="long" resultType="long">
+		select blog.no as no
+		from category join blog on category.blog_no = blog.no
+		where category.no = #{no}
+	</select>
+	<select id="getCntOfPostsInCategories" parameterType="long" resultType="CategoryVo">
+		select category.name, count(*) as postCnt
+		from post join category on post.category_no = category.no
+		where blog_no = #{blogNo}
+		group by category.no
+	</select>
+</mapper>

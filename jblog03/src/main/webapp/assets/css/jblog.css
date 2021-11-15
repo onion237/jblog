@@ -13,12 +13,11 @@ a:hover 		{ color:#dc143c; text-decoration:none; font-weight:bold; }
 
 
 .center-content	{ width:500px; margin:120px auto 50px auto}
-
+.logo{cursor:pointer}
 .center-content .logo							{ width:163px; height:104px; margin:20px auto; text-indent:-100000px; font-size:0 }
 .center-content .menu							{ text-align:center; height:20px; margin:0 auto }
 .center-content .menu li						{ display:inline; padding-left:20px }
 .center-content .menu li a						{ font-size:1.2em }
-
 .center-content form,
 .center-content .welcome-message					{ clear:both; margin:15px auto 25px auto; }
 .center-content .search-form 						{ width:100%; }
@@ -40,8 +39,8 @@ a:hover 		{ color:#dc143c; text-decoration:none; font-weight:bold; }
 
 .welcome-message								{ height: 200px }
 .welcome-message span							{ font-size:1.2em; font-wight:bold; color:#777 }
-.welcome-message span:before					{ content: url(/jblog/assets/images/bul1.gif);}
-.welcome-message span:after						{ content: url(/jblog/assets/images/bul2.gif);}		
+.welcome-message span:before					{ content: url(/jblog03/assets/images/bul1.gif);}
+.welcome-message span:after						{ content: url(/jblog03/assets/images/bul2.gif);}		
 
 
 
@@ -80,7 +79,7 @@ div#content .blog-list		{ margin:20px 0 10px 10px }
 /* admin content */
 div#content .admin-menu					{ height:20px; margin-top:15px; margin-bottom:10px }
 div#content .admin-menu li				{ float:left; margin-left:10px; }
-div#content .admin-menu li.selected		{ font-weight:bold }
+div#content .admin-menu li.selected		{ font-weight:bold; color:blue}
 div#content .admin-menu li:first-child	{ margin-left:0 }
 div#content .admin-menu a				{ font-weight:bold }
 

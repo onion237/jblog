@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="blog">
+	<insert id="insert" parameterType="BlogVo">
+		insert into blog(no, title, logo) values(#{no}, #{title}, #{logo})
+	</insert>
+	<update id="update" parameterType="BlogVo">
+		update blog 
+		set title = #{title}
+			<if test="logo != null">
+			,logo = #{logo}
+			</if>
+		where no = #{no}
+	</update>
+	<select id="findByNo" parameterType="long" resultType="BlogVo">
+		select no, title, logo
+		from blog
+		where no = #{no}
+	</select>
+	<select id="findByUserId" parameterType="string" resultType="BlogVo">
+		select blog.no, title, logo
+		from blog join user on blog.no = user.no
+		where id = #{id}
+	</select>
+	<select id="getCnt" resultType="long">
+		select count(*)
+		from blog
+	</select>
+	<select id="findAll" parameterType="map" resultType="BlogVo">
+		select no, title, logo
+		from blog
+		where title = #{blog.title}
+		limit #{pageInfo.offset}, #{pageInfo.resultPerPage}
+	</select>
+</mapper>
