@@ -8,6 +8,10 @@
 	<delete id="delete" parameterType="long">
 		delete from category where no = #{no} 
 	</delete>
+	<update id="update" parameterType="CategoryVo">
+		update category set name=#{name}, `desc` = #{desc}, is_default=#{isDefault}
+		where no = #{no}
+	</update>
 	<select id="findByNo" parameterType="long" resultType="CategoryVo">
 		select no, name, `desc`, is_default, blog_no
 		from category
@@ -19,7 +23,7 @@
 		where blog_no = #{blogNo}
 	</select>
 	<select id="findByBlogId" parameterType="string" resultType="CategoryVo">
-		select no, name, `desc`, is_default, blog_no, (select count(*) from post where category_no = no) as postCount
+		select no, name, `desc`, is_default, blog_no, (select count(*) from post where category_no = category.no) as postCount
 		from category
 		where blog_no = (select no from user where id = #{blogId})
 	</select>

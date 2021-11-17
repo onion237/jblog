@@ -44,6 +44,7 @@ public class BlogController {
 			@PathVariable(value="postNo", required = false) Optional<Long> postNo) {
 
 		BlogVo blog = blogService.get(id);
+		blog.setUserId(id);
 		List<CategoryVo> categoryList = categoryService.getList(id);
 		model.addAttribute("blog", blog);
 		model.addAttribute("categoryList", categoryList);
@@ -69,13 +70,14 @@ public class BlogController {
 	@Auth
 	@GetMapping("/admin/category")
 	public String adminCategory(Model model, @PathVariable String id) {
-		model.addAttribute("blog",categoryService.getList(id));		
+		model.addAttribute("list", categoryService.getList(id));		
 		return "blog/blog-admin-category";
 	}
 	
 	@Auth
 	@GetMapping("/admin/write")
-	public String adminWrite() {
+	public String adminWrite(Model model, @PathVariable String id) {
+		model.addAttribute("list", categoryService.getList(id));		
 		return "blog/blog-admin-write";
 	}
 }

@@ -2,22 +2,28 @@ package com.douzone.jblog.controller.api;
 
 import java.io.IOException;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.douzone.jblog.annotation.Auth;
+import com.douzone.jblog.annotation.AuthUser;
 import com.douzone.jblog.mvc.util.ApiResult;
 import com.douzone.jblog.service.BlogService;
 import com.douzone.jblog.service.CategoryService;
 import com.douzone.jblog.service.PostService;
 import com.douzone.jblog.vo.BlogVo;
+import com.douzone.jblog.vo.CategoryVo;
 import com.douzone.jblog.vo.PageInfo;
 import com.douzone.jblog.vo.PostVo;
+import com.douzone.jblog.vo.UserVo;
 
 @RestController
 @RequestMapping("/api/blog/{blogId}")
@@ -38,6 +44,20 @@ public class BlogApiController {
 	public ApiResult getCategoryList(@PathVariable("blogId") String blogId){
 		return ApiResult.success(categoryService.getList(blogId));
 	}
+	
+	@Auth
+	@PostMapping("/category")
+	public ApiResult insertCategory(@RequestBody CategoryVo category, @AuthUser UserVo authUser) {
+		category.setBlogNo(authUser.getNo());
+		categoryService.addCategory(category);
+		category.setPostCount(0L);
+		return ApiResult.success(category);
+	}
+	@Auth
+	@DeleteMapping("/category/{no}")
+	public ApiResult insertCategory(@PathVariable Long no) {
+		return ApiResult.success(categoryService.delete(no));
+	}
 
 	@GetMapping("/posts")
 	public ApiResult getPostList(
@@ -52,7 +72,13 @@ public class BlogApiController {
 		return ApiResult.success(postService.getList(post, pageInfo));
 	}
 	
-//	@Auth
+	@Auth
+	@PostMapping("/posts")
+	public ApiResult post(@RequestBody PostVo post) {
+		return ApiResult.success(postService.add(post));
+	}
+	
+	@Auth
 	@PostMapping
 	public ApiResult updateBasicInfo(BlogVo blog, @RequestPart("file") MultipartFile file) {
 		try {

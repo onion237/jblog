@@ -44,5 +44,9 @@ public class CategoryRepository {
 		return sqlSession.selectList("category.findByBlogId", blogId);
 	}
 
+	public boolean update(CategoryVo categoryVo) {
+		return sqlSession.update("category.update", categoryVo) > 0;
+	}
+
 
 }

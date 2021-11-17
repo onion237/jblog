@@ -11,11 +11,19 @@
 <Link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/jblog.css">
 <script type="text/javascript">
+	
 </script>
 </head>
 <body>
 	<div id="container">
-		<c:import url="/WEB-INF/views/includes/blog-header.jsp" />
+		<c:if test="${not empty authUser }">
+			<c:import url="/WEB-INF/views/includes/blog-header.jsp">
+				<c:param name="blogTitle" value="${authUser.blogTitle }" />
+			</c:import>
+		</c:if>
+		<c:if test="${empty authUser }">
+			<c:import url="/WEB-INF/views/includes/blog-header.jsp" />
+		</c:if>
 
 		<div id="wrapper">
 			<div id="content" class="full-screen">
@@ -33,48 +41,73 @@
 						<tr>
 							<td>${status.index + 1}</td>
 							<td>${category.name }</td>
-							<td>${category.count }</td>
+							<td>${category.postCount }</td>
 							<td>${category.desc }</td>
-							<td><img
-								src="${pageContext.request.contextPath}/assets/images/delete.jpg"></td>
+							<td><a id='delete-category' data-no='${category.no }' href=''> <img
+									src="${pageContext.request.contextPath}/assets/images/delete.jpg">
+							</a></td>
 						</tr>
 					</c:forEach>
-					<tr>
-						<td>2</td>
-						<td>스프링 스터디</td>
-						<td>20</td>
-						<td>어쩌구 저쩌구</td>
-						<td><img
-							src="${pageContext.request.contextPath}/assets/images/delete.jpg"></td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td>스프링 프로젝트</td>
-						<td>15</td>
-						<td>어쩌구 저쩌구</td>
-						<td><img
-							src="${pageContext.request.contextPath}/assets/images/delete.jpg"></td>
-					</tr>
 				</table>
 
 				<h4 class="n-c">새로운 카테고리 추가</h4>
 				<table id="admin-cat-add">
 					<tr>
 						<td class="t">카테고리명</td>
-						<td><input type="text" name="name"></td>
+						<td><input type="text" id='category-name' name="name"></td>
 					</tr>
 					<tr>
 						<td class="t">설명</td>
-						<td><input type="text" name="desc"></td>
+						<td><input type="text" id='category-desc' name="desc"></td>
 					</tr>
 					<tr>
 						<td class="s">&nbsp;</td>
-						<td><input type="submit" value="카테고리 추가"></td>
+						<td><input id='btn-addcategory' type="submit" value="카테고리 추가"></td>
 					</tr>
 				</table>
 			</div>
 		</div>
-		<c:import url="/WEB-INF/views/includes/blog-footer.jsp"/>
+		<c:import url="/WEB-INF/views/includes/blog-footer.jsp" />
 	</div>
+	<script type="text/javascript">
+		
+		$(function(){
+			$('#btn-addcategory').click(function(){
+				$.ajax({
+					url : `${pageContext.request.contextPath}/api/blog/${authUser.id}/category`,
+					type : 'POST',
+					data : JSON.stringify({
+						name: $('#category-name').val(),
+						desc: $('#category-desc').val()
+					}),
+					contentType: 'application/json',
+					dataType : 'json',
+					success: function(response){
+						if(response.result == 'fail'){
+							alert('실패')
+							return;
+						}
+						var lastIdx = parseInt($('td',$('.admin-cat tr').last()).first().text())
+						var html = `<tr>
+									<td>` + (lastIdx + 1) + `</td>
+									<td>` + response.data.name + `</td>
+									<td>` + response.data.postCount + `</td>
+									<td>` + response.data.desc + `</td>
+									<td>
+										<a href='' data-no='` + response.data.no + `'>
+										<img src="${pageContext.request.contextPath}/assets/images/delete.jpg"></td>
+										</a>
+									</tr>`
+						
+						$('.admin-cat').append(html) 
+					},
+					error: function(e){
+						console.log(e)
+						alert('실패')
+					}
+				})
+			})
+		})
+	</script>
 </body>
 </html>

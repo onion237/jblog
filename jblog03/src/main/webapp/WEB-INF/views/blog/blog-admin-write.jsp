@@ -10,17 +10,17 @@
 <title>JBlog</title>
 <Link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/jblog.css">
-<script type="text/javascript">
-	$(function(){
-		$('#write-form').submit(function(){
-			
-		})
-	})
-</script>
 </head>
 <body>
 	<div id="container">
-		<c:import url="/WEB-INF/views/includes/blog-header.jsp" />
+		<c:if test="${not empty authUser }">
+			<c:import url="/WEB-INF/views/includes/blog-header.jsp">
+				<c:param name="blogTitle" value="${authUser.blogTitle }"/>
+			</c:import>
+		</c:if>
+		<c:if test="${empty authUser }">
+			<c:import url="/WEB-INF/views/includes/blog-header.jsp"/>
+		</c:if>
 
 		<div id="wrapper">
 			<div id="content" class="full-screen">
@@ -52,5 +52,33 @@
 		<c:import url="/WEB-INF/views/includes/blog-footer.jsp"/>
 		
 	</div>
+	<script type="text/javascript">
+	$(function(){
+		$('#write-form').submit(function(e){
+			e.preventDefault();
+			$.ajax({
+				url : `${pageContext.request.contextPath}/api/blog/${authUser.id}/posts`,
+				type : 'post',
+				contentType : 'application/json',
+				dataType : 'json',
+				data : JSON.stringify({
+					categoryNo : $('#category').val(),
+					title : $('#title').val(),
+					contents : $('#contents').val()
+				}),
+				success : function(response){
+					if(response.result == 'success'){
+						alert("작성 완료")
+						$('#title').val('');
+						$('#contents').val('');
+						return;
+					}else{
+						alert('작성 실패')
+					}
+				}
+			})
+		})
+	})
+	</script>
 </body>
 </html>

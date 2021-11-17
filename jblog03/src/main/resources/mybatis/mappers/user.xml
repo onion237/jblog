@@ -9,7 +9,7 @@
 		select no, name, id, join_date from user where no = #{no}
 	</select>
 	<select id="findByIdAndPassword" parameterType="UserVo" resultType="UserVo">
-		select user.no, name, id, title as blogTitle 
+		select user.no as no, name, id, title as blogTitle 
 		from user join blog on user.no = blog.no
 		where id = #{id} and password = #{password}
 	</select>

@@ -7,7 +7,13 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <div id="header">
-	<h1>${blog.title}</h1>
+	
+	<c:if test="${not empty param.blogTitle }">
+		<h1>${param.blogTitle }</h1>	
+	</c:if>
+	<c:if test="${empty param.blogTitle }">
+		<h1>${blog.title }</h1>	
+	</c:if>
 	<ul>
 		<c:if test="${empty authUser}">
 			<li><a href="${pageContext.request.contextPath}/user/login">로그인</a></li>

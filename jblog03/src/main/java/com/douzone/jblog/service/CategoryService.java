@@ -16,13 +16,13 @@ public class CategoryService {
 		this.categoryRepository = categoryRepository;
 	}
 	public boolean addCategory(CategoryVo categoryVo) {
-		return false;
+		return categoryRepository.insert(categoryVo);
 	}
 	public boolean modify(CategoryVo categoryVo) {
-		return false;
+		return categoryRepository.update(categoryVo);
 	}
 	public boolean delete(Long categoryNo) {
-		return false;
+		return categoryRepository.delete(categoryNo);
 	}
 	
 	public CategoryVo get(Long no) {

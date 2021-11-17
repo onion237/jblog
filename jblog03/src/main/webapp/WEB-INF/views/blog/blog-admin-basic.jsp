@@ -13,7 +13,14 @@
 </head>
 <body>
 	<div id="container">
-		<c:import url="/WEB-INF/views/includes/blog-header.jsp" />
+		<c:if test="${not empty authUser }">
+			<c:import url="/WEB-INF/views/includes/blog-header.jsp">
+				<c:param name="blogTitle" value="${authUser.blogTitle }"/>
+			</c:import>
+		</c:if>
+		<c:if test="${empty authUser }">
+			<c:import url="/WEB-INF/views/includes/blog-header.jsp"/>
+		</c:if>
 		<div id="wrapper">
 			<div id="content" class="full-screen">
 				<c:import url="/WEB-INF/views/includes/admin-menu.jsp" />
