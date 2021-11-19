@@ -49,4 +49,14 @@ public class CategoryRepository {
 	}
 
 
+	public int getCategoryCntByBlogNo(Long blogNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("category.getCategoryCntByBlogNo", blogNo);
+	}
+
+	public boolean updateDefaultAny(CategoryVo vo) {
+		return sqlSession.update("category.updateDefaultAny", vo) > 0;
+	}
+
+
 }

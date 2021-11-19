@@ -14,14 +14,9 @@
 		<c:import url="/WEB-INF/views/includes/blog-header.jsp"/>
 		<div id="wrapper">
 			<div id="content">
-					${blog } --- blog<br/>
-					${categoryList } ---- categoryList<br/>
-					${postList } --- postList<br/>
-					${post } ---- post<br/>
 				<div class="blog-content">
 					<h4>${post.title }</h4>
-					<p>${post.contents }
-					</p>
+					<p>${post.contents}</p>
 				</div>
 				<ul class="blog-list">
 					<c:forEach items="${ postList}" var="vo">
@@ -43,12 +38,7 @@
 				<c:forEach items="${categoryList}" var="vo">
 					<li><a href='${pageContext.request.contextPath }/${blog.userId}/${vo.no}'>${vo.name }</a></li>
 				</c:forEach>
-				<!-- 
-				<li><a href="">닥치고 스프링</a></li>
-				<li><a href="">스프링 스터디</a></li>
-				<li><a href="">스프링 프로젝트</a></li>
-				<li><a href="">기타</a></li>
-				 -->
+		
 			</ul>
 		</div>
 		

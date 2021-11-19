@@ -56,7 +56,8 @@ public class BlogApiController {
 	@Auth
 	@DeleteMapping("/category/{no}")
 	public ApiResult insertCategory(@PathVariable Long no) {
-		return ApiResult.success(categoryService.delete(no));
+		boolean deleted = categoryService.delete(no);
+		return deleted? ApiResult.success(deleted): ApiResult.fail("삭제 실패");
 	}
 
 	@GetMapping("/posts")

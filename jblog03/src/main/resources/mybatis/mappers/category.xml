@@ -38,4 +38,15 @@
 		where blog_no = #{blogNo}
 		group by category.no
 	</select>
+	<select id="getCategoryCntByBlogNo" parameterType="long" resultType="int">
+		select count(*)
+		from category
+		where blog_no = #{blogNo}
+	</select>
+	<update id="updateDefaultAny" parameterType="CategoryVo">
+		update category
+		set is_default = true
+		where blog_no = #{blogNo}
+		and no = (select no from (select no from category where blog_no = #{blogNo} limit 1) t)
+	</update>
 </mapper>

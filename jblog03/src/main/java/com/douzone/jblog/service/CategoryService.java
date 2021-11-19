@@ -3,6 +3,7 @@ package com.douzone.jblog.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.douzone.jblog.repository.CategoryRepository;
 import com.douzone.jblog.vo.CategoryVo;
@@ -21,13 +22,24 @@ public class CategoryService {
 	public boolean modify(CategoryVo categoryVo) {
 		return categoryRepository.update(categoryVo);
 	}
+	
+	@Transactional
 	public boolean delete(Long categoryNo) {
-		return categoryRepository.delete(categoryNo);
+		CategoryVo vo = categoryRepository.findByNo(categoryNo);
+		
+		if(categoryRepository.getCategoryCntByBlogNo(vo.getBlogNo()) < 2){			
+			return false;
+		}
+		
+		boolean deleted = categoryRepository.delete(categoryNo);
+		if(vo.isDefault()) {
+			System.out.println("dddddddddddddddddddddddddddddddddddd");
+			if(!categoryRepository.updateDefaultAny(vo)) return false;
+		}
+		
+		return deleted;
 	}
 	
-	public CategoryVo get(Long no) {
-		return null;
-	}
 	
 	public List<CategoryVo> getList(String blogId){
 		return categoryRepository.findByBlogId(blogId);

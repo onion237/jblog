@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.douzone.jblog.repository.BlogRepository;
 import com.douzone.jblog.repository.CategoryRepository;
 import com.douzone.jblog.repository.PostRepository;
 import com.douzone.jblog.vo.PageInfo;
@@ -14,13 +15,15 @@ import com.douzone.jblog.vo.UserVo;
 public class PostService {
 	private final PostRepository postRepository;
 	private final CategoryRepository categoryRepository;
+
 	
+
 	public PostService(PostRepository postRepository, CategoryRepository categoryRepository) {
 		super();
 		this.postRepository = postRepository;
 		this.categoryRepository = categoryRepository;
 	}
-	
+
 	public boolean add(PostVo post) {
 		return postRepository.insert(post);
 	}

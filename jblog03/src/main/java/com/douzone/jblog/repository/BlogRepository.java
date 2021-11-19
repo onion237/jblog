@@ -50,4 +50,9 @@ public class BlogRepository {
 		return sqlSession.update("blog.update",blog) > 0;
 	}
 
+
+	public int getCategoryCnt() {
+		return sqlSession.selectOne("blog.getCategoryCnt");
+	}
+
 }

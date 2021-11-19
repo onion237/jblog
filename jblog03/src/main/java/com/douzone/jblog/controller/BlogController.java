@@ -55,7 +55,10 @@ public class BlogController {
 		model.addAttribute("postList", postService.getList(post, pageInfo));
 		
 		postNo.ifPresent((no) -> model.addAttribute("post",  postService.get(no)));
-		postNo.orElseGet(() -> {model.addAttribute("post", postService.getLatestPostInCategory(defaultCategory.get().getNo()));return 1L;});
+		postNo.orElseGet(() -> {
+			model.addAttribute("post", postService.getLatestPostInCategory(categoryNo.orElse(defaultCategory.get().getNo())));
+			return 1L;
+		});
 		
 		return "blog/blog-main";
 	}

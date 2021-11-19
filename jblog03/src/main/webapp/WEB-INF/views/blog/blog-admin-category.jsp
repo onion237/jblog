@@ -39,11 +39,12 @@
 					</tr>
 					<c:forEach items="${list }" var="category" varStatus="status">
 						<tr>
-							<td>${status.index + 1}</td>
+							<td class='idx'>${status.index + 1}</td>
 							<td>${category.name }</td>
-							<td>${category.postCount }</td>
+							<td class='post-count'>${category.postCount }</td>
 							<td>${category.desc }</td>
-							<td><a id='delete-category' data-no='${category.no }' href=''> <img
+							<td><a class='delete-category' data-no='${category.no }'
+								href=''> <img
 									src="${pageContext.request.contextPath}/assets/images/delete.jpg">
 							</a></td>
 						</tr>
@@ -72,6 +73,48 @@
 	<script type="text/javascript">
 		
 		$(function(){
+			$('.admin-cat').click(function(e){
+				let aEl = $(e.target).parent()
+				if(!aEl.hasClass('delete-category'))
+					return;
+			
+				e.preventDefault()
+				let no = aEl.data('no')
+				let tr = aEl.parent().parent();
+				
+				console.log($('.post-count', tr).text())
+				if($('.admin-cat .idx').length < 2){
+					alert('카테고리는 1개 이상이어야 합니다.')
+					return;
+				}
+				if($('.post-count', tr).text() != 0){
+					if(!confirm('카테고리에 등록된 포스트를 전부 삭제하시겠습니까'))
+						return
+					
+				}
+				
+				$.ajax({
+					url : `${pageContext.request.contextPath}/api/blog/${authUser.id}/category/` + no,
+					type : 'DELETE',			
+					dataType : 'json',
+					success: function(response){
+						if(response.result == 'fail'){
+							alert('실패')
+							return;
+						}
+						
+						for(let idxTd of $('.idx',tr.nextAll())) 
+							$(idxTd).text(parseInt($(idxTd).text()) - 1)
+
+						tr.remove()						
+					},
+					error: function(e){
+						console.log(e)
+						alert('실패')
+					}
+				})
+			})
+			
 			$('#btn-addcategory').click(function(){
 				$.ajax({
 					url : `${pageContext.request.contextPath}/api/blog/${authUser.id}/category`,
@@ -87,14 +130,15 @@
 							alert('실패')
 							return;
 						}
+						
 						var lastIdx = parseInt($('td',$('.admin-cat tr').last()).first().text())
 						var html = `<tr>
-									<td>` + (lastIdx + 1) + `</td>
+									<td class='idx'>` + (lastIdx + 1) + `</td>
 									<td>` + response.data.name + `</td>
-									<td>` + response.data.postCount + `</td>
+									<td class='post-count'>` + response.data.postCount + `</td>
 									<td>` + response.data.desc + `</td>
 									<td>
-										<a href='' data-no='` + response.data.no + `'>
+										<a class='delete-category' href='' data-no='` + response.data.no + `'>
 										<img src="${pageContext.request.contextPath}/assets/images/delete.jpg"></td>
 										</a>
 									</tr>`
