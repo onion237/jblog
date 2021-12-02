@@ -82,6 +82,7 @@ public class BlogApiController {
 	@Auth
 	@PostMapping
 	public ApiResult updateBasicInfo(BlogVo blog, @RequestPart("file") MultipartFile file) {
+		System.out.println(file);
 		try {
 			blogService.modify(blog, file.getBytes(), file.getOriginalFilename());
 			return ApiResult.success(blog);

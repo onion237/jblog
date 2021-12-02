@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+	<insert id="insert" parameterType="BoardVo">
+		insert into board(title, contents, user_no, group_no, order_no, depth) 
+		values(#{title},#{contents},#{userNo}, (select * from (select ifnull(max(group_no), 0) + 1 from board for update) as b), 0,0)
+	</insert>
+	<select id="getGroupInfo" parameterType="BoardVo" resultType="BoardVo">
+		select group_no, order_no, depth from board where no = #{replyTo}
+	</select>
+	<update id="updateOrder" parameterType="BoardVo">
+		update board set order_no = order_no + 1 where group_no = #{groupNo} and order_no > #{orderNo}
+	</update>
+	<insert id="insertReply">
+		insert into board(title, contents, user_no, group_no, order_no, depth) values(#{title},#{contents},#{userNo},#{groupNo},#{orderNo},#{depth})
+	</insert>
+	
+	<select id="findAll" parameterType="hashmap" resultType="BoardVo">
+		select board.no as no, title, hit, date_format(reg_date, '%Y-%m-%d %H:%i:%s') as regDate, group_no, order_no, depth, user_no, name as userName, is_deleted
+		from board join user on user.no = board.user_no where title like CONCAT('%',#{board.title},'%')
+		order by group_no desc, order_no asc limit #{page.offset}, #{page.cntPerPage}
+	</select>
+	
+	<select id="getCount" parameterType="BoardVo" resultType="long">
+		select count(*) as cnt 
+		from board join user on user.no = board.user_no
+		where title like concat('%',#{title},'%')
+	</select>
+	<select id="findByNo" parameterType="long" resultType="BoardVo">
+		select board.no as no, title, contents, hit, date_format(reg_date, '%Y-%m-%d %H:%i:%s') as regDate, user.no as userNo, user.name as userName
+		from board join user on user.no = board.user_no where board.no = #{no} and is_deleted = false
+	</select>
+	<update id="updateHit" parameterType="long">
+		update board set hit = hit + 1 where no = #{no}
+	</update>
+	<select id="getUserNo" parameterType="long" resultType="long">
+		select user_no from board where no = #{no}
+	</select>
+	<update id="update">
+		update board set title = #{title}, contents = #{contents} where no = #{no}
+	</update>
+	<delete id="delete">
+		update board set is_deleted = true where no = #{no}
+	</delete>
+	
+</mapper>

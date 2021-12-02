@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.douzone.jblog.vo.UserVo" alias="UserVo"/>
+		<typeAlias type="com.douzone.jblog.vo.BlogVo" alias="BlogVo"/>
+		<typeAlias type="com.douzone.jblog.vo.CategoryVo" alias="CategoryVo"/>
+		<typeAlias type="com.douzone.jblog.vo.PostVo" alias="PostVo"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="mybatis/mappers/user.xml" />
+		<mapper resource="mybatis/mappers/blog.xml" />
+		<mapper resource="mybatis/mappers/category.xml" />
+		<mapper resource="mybatis/mappers/post.xml" />
+	</mappers>
+</configuration>

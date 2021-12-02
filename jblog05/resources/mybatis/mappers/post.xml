@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="post">
+	<insert id="insert" parameterType="PostVo" useGeneratedKeys="true" keyProperty="no">
+		insert into post(title, contents,
+		category_no) values(#{title},#{contents},#{categoryNo})
+	</insert>
+	<delete id="delete" parameterType="PostVo">
+		delete from post where no =
+		#{no}
+	</delete>
+	<select id="findAllByUserNo" parameterType="long"
+		resultType="PostVo">
+		select no, title, contents, date_format(reg_date, '%Y/%m/%d
+		%H:%i:%s') as regDate, category_no
+		from post join category on post.category_no = category.no
+		where
+		category.blog_no = #{no}
+		order by no desc
+	</select>
+	<select id="findAllByCategoryNo" parameterType="long"
+		resultType="PostVo">
+		select no, title, contents, date_format(reg_date, '%Y/%m/%d
+		%H:%i:%s') as regDate, category_no
+		from post
+		where category_no = #{categoryNo}
+		order by no desc
+	</select>
+	<select id='getLatest' parameterType="long" resultType="PostVo">
+		select no, title, contents, date_format(reg_date, '%Y/%m/%d %H:%i:%s')
+		as regDate, category_no
+		from post
+		<if test="value != null">
+			where category_no = #{categoryNo}
+		</if>
+		order by no desc
+		limit 1
+	</select>
+	<select id="findAll" parameterType="map" resultType="PostVo">
+		<if test="post.blogTitle != null">
+			select post.no as no, post.title as title, date_format(reg_date, '%Y/%m/%d
+			%H:%i:%s') as regDate, category_no
+			from post join category on post.category_no = category.no
+			join blog on category.blog_no = blog.no
+			where blog.title =
+			#{post.blogTitle}
+		</if>
+		<if test="post.blogTitle == null">
+			select post.no as no, post.title as title, date_format(reg_date, '%Y/%m/%d %H:%i:%s') as
+			regDate, category_no
+			from post join category on post.category_no = category.no
+			where 1=1
+			<if test="post.title != null">
+				and title = #{post.title}
+			</if>
+			<if test="post.contents != null">
+				and contents = #{post.contents}
+			</if>
+			<if test="post.categoryNo != null">
+				and category_no = #{post.categoryNo}
+			</if>
+		</if>
+		order by no desc
+		limit #{pageInfo.offset}, #{pageInfo.resultPerPage}
+	</select>
+
+	<select id="getCntOfSearchResult" parameterType="map"
+		resultType="long">
+		<if test="blogTitle != null">
+			select count(*)
+			from post join category on post.category_no
+			= category.no
+			join blog on category.blog_no = blog.no
+			where blog.title =
+			#{post.blogTitle}
+		</if>
+		<if test="blogTitle == null">
+			select count(*)
+			from post join category on post.category_no =
+			category.no
+			where 1=1
+			<if test="title != null">
+				and title = #{post.title}
+			</if>
+			<if test="contents != null">
+				and contents = #{post.contents}
+			</if>
+		</if>
+	</select>
+	<select id="findByNo" parameterType="long" resultType="PostVo">
+		select no,
+		title, contents, date_format(reg_date, '%Y/%m/%d %H:%i:%s') as
+		regDate, category_no
+		from post
+		where no = #{no}
+		order by no desc
+	</select>
+	<select id="getUserByPostNo" parameterType="long"
+		resultType="UserVo">
+		select user.no, user.name, user.id,
+		date_format(user.join_date, '%Y/%m/%d %H:%i:%s') as joinDate
+		from post
+		join category on post.category_no = category.no
+		join user on category.blog_no = user.no
+	</select>
+	<update id="update" parameterType="PostVo">
+		update post
+		set title = #{title},
+		contents = #{contents},
+		category_no = #{categoryNo}
+	</update>
+</mapper>
